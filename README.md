@@ -42,7 +42,7 @@ The source archive URL, download checksum and data audit are retained in the gen
 
 **Live Streamlit app:** [QSAR Biodegradability Model Comparison](https://qsar-biodegradability-model-comparison.streamlit.app/)
 
-The deployed app uses branch `codex/ml-assignment-2`, entry point `app.py` and Python 3.12.16. Anonymous app access, all five classifier selections, displayed scores and the test CSV download were verified. The live upload control is enabled; the full CSV upload flow was verified locally and still needs a live browser upload check.
+Deploy from branch `main`, entry point `app.py` and Python 3.12. The verified Community Cloud runtime is Python 3.12.16. Anonymous app access, all five classifier selections, displayed scores and the test CSV download were verified. The live upload control is enabled; the full CSV upload flow was verified locally and still needs a live browser upload check.
 
 ## d. Models used
 
@@ -215,7 +215,7 @@ The project is already published and deployed at the links in section c. To repr
 
 1. Use GitHub repository **`NithinNarayanan07/qsar-biodegradability-model-comparison`**. Keep the source, dependency files, `test_data.csv`, `model/`, `data/`, results and documentation in the repository; exclude `.venv/` and secrets.
 2. Sign in to [Streamlit Community Cloud](https://share.streamlit.io/) with GitHub and create an app from that repository.
-3. Select branch **`codex/ml-assignment-2`**, entry point **`app.py`**, and **Python 3.12** in advanced settings.
+3. Select branch **`main`**, entry point **`app.py`**, and **Python 3.12** in advanced settings.
 4. After deployment, verify the included test set, all five classifier choices, a real CSV upload and downloads. The test CSV download should match the repository's `test_data.csv`.
 5. Verify both links from the perspective of an evaluator with the intended access. See [official deployment instructions](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy).
 

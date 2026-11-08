@@ -1,0 +1,16 @@
+{
+  "dataset": "QSAR biodegradation",
+  "uci_id": 254,
+  "dataset_url": "https://archive.ics.uci.edu/dataset/254/qsar+biodegradation",
+  "download_url": "https://archive.ics.uci.edu/static/public/254/qsar+biodegradation.zip",
+  "doi": "https://doi.org/10.24432/C5H60M",
+  "license": "CC BY 4.0",
+  "citation": "Mansouri, K., Ringsted, T., Ballabio, D., Todeschini, R., & Consonni, V. (2013). QSAR biodegradation [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5H60M",
+  "verified_at_utc": "2026-11-08T05:35:51.907539+00:00",
+  "acquisition": "downloaded from official UCI archive",
+  "raw_file": "biodeg.csv",
+  "raw_sha256": "c66ac1a23aba11fb166fd5054fea14ac97b8e4f7e4940ae679dc863d1cc4b3c9",
+  "raw_bytes": 155987,
+  "archive_sha256": "b5f7cf1b05564d94d65265a9a4aeae5fffcd15b8d3bcafe4225a8827d7ae08ac",
+  "format": "UTF-8; semicolon separated; no header; 41 features followed by NRB/RB class"
+}

@@ -1,0 +1,134 @@
+:root {
+    --bio-ink: #163b2c;
+    --bio-muted: #597166;
+    --bio-green: #166b4e;
+    --bio-line: #dce8df;
+    --bio-white: #ffffff;
+}
+
+.stApp { background: #f4f7f2; color: var(--bio-ink); }
+.stApp, .stApp p, .stApp label, .stApp button, .stApp input {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+[data-testid="stMainBlockContainer"] { max-width: 1280px; padding-top: 5rem; padding-bottom: 3rem; }
+[data-testid="stHeader"] { background: #f4f7f2; }
+.stApp h1, .stApp h2, .stApp h3 { color: var(--bio-ink); letter-spacing: -0.035em; }
+.stApp h3 { font-size: 1.25rem; font-weight: 680; }
+[data-testid="stCaptionContainer"] { color: var(--bio-muted); line-height: 1.6; }
+/* Captions already use muted ink; avoid Streamlit dimming that ink a second time. */
+.stApp [data-testid="stCaptionContainer"] { opacity: 1; }
+
+/* A distinct product header, using native Streamlit text for accessibility. */
+.st-key-hero {
+    padding: 27px 30px 25px;
+    background: #123d2e;
+    border: 1px solid #275842;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px #123d2e0c;
+    gap: 0.6rem;
+}
+.st-key-hero h1 {
+    color: #fbfdf8;
+    font-size: clamp(2rem, 3.3vw, 2.8rem);
+    line-height: 1.12;
+    font-weight: 720;
+    letter-spacing: -0.05em;
+    padding: 0;
+}
+.st-key-hero p { color: #d5e5d9; font-size: 0.92rem; line-height: 1.65; max-width: 760px; margin: 0; }
+.hero-eyebrow { display: flex; align-items: center; gap: 8px; color: #c5dfb4; font-size: 10px; font-weight: 700; letter-spacing: 0.17em; }
+.hero-eyebrow > span { width: 7px; height: 7px; background: #b5db85; border-radius: 50%; }
+.hero-facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 7px; }
+.hero-facts > span { padding: 7px 11px; border: 1px solid #456b50; border-radius: 8px; background: #204c37; color: #e7f0e2; font-size: 11px; }
+.hero-facts b { color: #d2eaa9; font-size: 12px; margin-right: 5px; font-variant-numeric: tabular-nums; }
+
+/* Sage navigation surface, with white controls and a clear two-step flow. */
+[data-testid="stSidebar"] { background: #e9f1e8; border-right: 1px solid #d6e3d7; }
+[data-testid="stSidebarUserContent"] { padding-top: 1.5rem; }
+.sidebar-brand { display: flex; align-items: center; gap: 12px; padding-bottom: 7px; }
+.brand-symbol { position: relative; width: 44px; height: 44px; background: #18563d; border: 1px solid #286e4a; border-radius: 13px; }
+.brand-symbol::before { content: ""; position: absolute; left: 12px; top: 7px; width: 18px; height: 25px; background: #d3edb4; border-radius: 17px 2px 17px 2px; transform: rotate(13deg); }
+.brand-symbol::after { content: ""; position: absolute; left: 22px; top: 13px; width: 1.5px; height: 23px; background: #ffffff; border-radius: 2px; transform: rotate(32deg); }
+.sidebar-brand strong { display: block; font-size: 22px; font-weight: 780; letter-spacing: -0.06em; line-height: 1.2; color: #143d2b; }
+.sidebar-brand span { display: block; font-size: 11px; color: #566d60; margin-top: 2px; }
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] { font-size: 11px; color: #546e5d; }
+.sidebar-step { display: flex; align-items: center; gap: 9px; padding-top: 12px; margin-bottom: 1px; }
+.sidebar-step > span { font-size: 10px; line-height: 24px; width: 24px; height: 24px; text-align: center; color: #22683f; background: #d7e9d3; border: 1px solid #c6ddc2; border-radius: 7px; font-weight: 750; }
+.sidebar-step strong { color: #254d36; font-size: 13px; font-weight: 700; }
+[data-testid="stSidebar"] [data-testid="stSelectbox"] > div,
+[data-testid="stSidebar"] [data-testid="stFileUploader"] section { background: #ffffff; border: 1px solid #ccddcf; border-radius: 10px; }
+[data-testid="stSidebar"] hr { border-color: #ccddce; }
+.class-legend { display: grid; gap: 9px; }
+.class-legend > div { display: flex; align-items: center; gap: 9px; font-size: 11px; color: #4f6859; }
+.class-legend b { min-width: 38px; padding: 5px 7px; text-align: center; border-radius: 6px; background: #d6ebd7; color: #255b36; font-size: 10px; letter-spacing: .03em; }
+.class-legend .nrb b { background: #f2e6ce; color: #76531f; }
+
+/* Dataset context and native tabs. */
+.st-key-data_context { border: 1px solid var(--bio-line); border-radius: 10px; background: var(--bio-white); padding: 11px 16px; }
+.st-key-data_context [data-testid="stCaptionContainer"] { color: #486655; font-size: 12px; }
+[data-testid="stTabs"] [role="tablist"] { gap: 6px; border-bottom: 1px solid #dce7dc; padding-bottom: 6px; }
+[data-testid="stTabs"] [role="tab"] { color: #5a7164; border-radius: 8px; font-size: 13px; padding: 10px 16px; }
+[data-testid="stTabs"] [role="tab"][aria-selected="true"] { background: #e0eddd; color: #185535; font-weight: 700; }
+.st-key-selected_model { gap: 0.15rem; padding-top: 8px; }
+.st-key-selected_model h3 { font-size: 1.4rem; }
+
+/* Color denotes the metric type, not whether its result is good or bad. */
+.st-key-metric_accuracy { --metric-bg: #e7f3e9; --metric-accent: #277b4c; --metric-border: #cde4d0; }
+.st-key-metric_auc { --metric-bg: #e3f1ed; --metric-accent: #1b746b; --metric-border: #c7e0da; }
+.st-key-metric_precision { --metric-bg: #eaf0fa; --metric-accent: #4568a5; --metric-border: #d4def0; }
+.st-key-metric_recall { --metric-bg: #fbf1de; --metric-accent: #8d6626; --metric-border: #eadcbf; }
+.st-key-metric_f1 { --metric-bg: #f0eaf7; --metric-accent: #79599e; --metric-border: #dfd3ed; }
+.st-key-metric_mcc { --metric-bg: #f7eae5; --metric-accent: #925742; --metric-border: #ebd6cc; }
+.st-key-metric_accuracy, .st-key-metric_auc, .st-key-metric_precision,
+.st-key-metric_recall, .st-key-metric_f1, .st-key-metric_mcc {
+    background: var(--metric-bg);
+    border: 1px solid var(--metric-border);
+    border-top: 3px solid var(--metric-accent);
+    border-radius: 12px;
+    padding: 13px 14px 11px;
+    min-height: 103px;
+    box-shadow: 0 2px 3px #183c2803;
+}
+[data-testid="stMetric"] { padding: 0; gap: 4px; }
+[data-testid="stMetricLabel"] { color: var(--metric-accent); font-size: 12px; font-weight: 650; }
+[data-testid="stMetricLabel"] p { font-size: 12px; font-weight: 650; }
+[data-testid="stMetricValue"] { font-size: clamp(1.35rem, 2.5vw, 1.85rem); font-weight: 720; color: #183c2b; font-variant-numeric: tabular-nums; letter-spacing: -0.045em; line-height: 1.3; }
+
+/* White panels give tables and diagnostics a consistent visual home. */
+.st-key-panel_comparison, .st-key-panel_confusion, .st-key-panel_report,
+.st-key-panel_method, .st-key-panel_schema {
+    background: #ffffff;
+    border: 1px solid var(--bio-line);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 3px 12px #183d2704;
+}
+.st-key-panel_comparison h3, .st-key-panel_confusion h3, .st-key-panel_report h3 { padding-top: 0; }
+[data-testid="stDataFrame"] { border-radius: 9px; overflow: hidden; }
+[data-testid="stExpander"] { background: #ffffff; border-radius: 12px; border-color: var(--bio-line); }
+[data-testid="stExpander"] summary { color: #284d38; font-size: 13px; font-weight: 600; }
+.stApp button { border-radius: 9px; font-size: 12px; font-weight: 600; }
+.stApp a { color: #176b4c; }
+
+/* Full class names need enough room for every classification-report column. */
+@media (max-width: 1400px) {
+    .st-key-diagnostics [data-testid="stHorizontalBlock"] { flex-direction: column; }
+    .st-key-diagnostics [data-testid="stColumn"] { flex: 1 1 100%; min-width: 100%; width: 100%; }
+}
+
+@media (max-width: 900px) {
+    [data-testid="stMainBlockContainer"] { padding-left: 1rem; padding-right: 1rem; }
+    .st-key-hero { padding: 22px; }
+    .st-key-hero h1 { font-size: 2rem; }
+    .st-key-panel_comparison, .st-key-panel_confusion, .st-key-panel_report,
+    .st-key-panel_method, .st-key-panel_schema { padding: 15px; }
+    .st-key-metric_accuracy, .st-key-metric_auc, .st-key-metric_precision,
+    .st-key-metric_recall, .st-key-metric_f1, .st-key-metric_mcc { padding: 11px 10px; }
+    [data-testid="stMetricValue"] { font-size: 1.45rem; letter-spacing: -0.04em; }
+}
+
+@media (max-width: 520px) {
+    .st-key-hero { padding: 20px; border-radius: 15px; }
+    .st-key-hero h1 { font-size: 1.9rem; }
+    .hero-facts > span { font-size: 10px; padding: 6px 8px; }
+}

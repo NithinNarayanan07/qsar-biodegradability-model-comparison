@@ -7,3 +7,9 @@ __pycache__/
 .cache/
 tmp/
 *.log
+
+# Keep intermediate design captures local; publish only the current app guides.
+screenshots/*.jpg
+!screenshots/local-preview.jpg
+!screenshots/faculty-test-data-guide.jpg
+!screenshots/faculty-metrics-guide.jpg

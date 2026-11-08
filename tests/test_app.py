@@ -10,6 +10,7 @@ from sklearn.pipeline import Pipeline
 from streamlit.testing.v1 import AppTest
 
 from ml_core import METRIC_NAMES, MODEL_FILES, evaluate_model, load_models, read_test_csv
+from presentation import MODEL_DISPLAY_NAMES
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,7 +35,7 @@ def test_sample_loads_all_required_metrics_and_all_five_model_rows(app):
     assert [metric.label for metric in app.metric] == METRIC_NAMES
     comparison = app.dataframe[0].value
     assert isinstance(comparison, pd.DataFrame)
-    assert comparison.index.tolist() == list(MODEL_FILES)
+    assert comparison.index.tolist() == [MODEL_DISPLAY_NAMES[name] for name in MODEL_FILES]
     assert comparison.columns.tolist() == METRIC_NAMES
 
 
@@ -45,7 +46,7 @@ def test_classifier_selection_updates_metrics_from_the_saved_model(app):
         app.selectbox[0].select(selected).run()
         assert not app.exception
         assert not app.error
-        assert selected in [heading.value for heading in app.subheader]
+        assert MODEL_DISPLAY_NAMES[selected] in [heading.value for heading in app.subheader]
         expected = evaluate_model(models[selected], test_frame)["metrics"]
         assert {metric.label: metric.value for metric in app.metric} == {
             name: f"{expected[name]:.4f}" for name in METRIC_NAMES
@@ -77,7 +78,7 @@ def test_valid_upload_is_parsed_and_compared_without_training(monkeypatch):
     assert not app.error
     assert len(app.metric) == 6
     assert app.dataframe[0].value.shape == (5, 6)
-    assert any("Uploaded test data" in caption.value and "25 rows" in caption.value for caption in app.caption)
+    assert any("Uploaded test data" in caption.value and "25 chemical records" in caption.value for caption in app.caption)
 
 
 def test_bad_upload_shows_validation_message_instead_of_results(monkeypatch):

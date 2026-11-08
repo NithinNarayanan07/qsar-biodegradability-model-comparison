@@ -2,15 +2,43 @@
 
 Use this guide alongside the code and your own run. The assignment permits AI as learning support; review the decisions, reproduce the results, and write observations you can explain before submitting.
 
-## Follow one example through the project
+## A reading route for faculty and students
 
-1. `fetch_data.py` obtains the original UCI dataset and records its provenance.
-2. `train.py` removes exact duplicate records, separates training and test rows, fits five pipelines and saves them under `model/`.
-3. `ml_core.py` validates test data, loads the saved pipelines, predicts labels and computes metrics.
-4. `app.py` displays those evaluations in Streamlit. It does not train a model.
-5. `test_data.csv` contains the labeled holdout used for the comparison in the README.
+Start with the README's problem statement, dataset description, comparison table and observations. For the source review, follow the data from its public origin to the displayed results:
+
+| Read | Module | What to look for |
+| --- | --- | --- |
+| 1 | `fetch_data.py` | The public download URL, source checksum and provenance record. Existing source data is verified before reuse. |
+| 2 | `train.py` | The five model definitions, duplicate handling, shared training/test split, and the fitting and saving of complete pipelines. |
+| 3 | `ml_core.py` | Required CSV columns, target labels, input checks, loading of fixed model files, predictions and metric calculations. |
+| 4 | `app.py` | The Streamlit entry point and named interface sections that coordinate user choices, evaluation and displayed results. |
+| 5 | `presentation.py` | The theme, brand, metric-card explanations and chart builders. Visual styling lives in `styles.css`. |
+
+Comments explain why decisions such as splitting before scaling are necessary. The module boundaries separate scientific calculations from interface presentation, so a change in colors or labels need not change model behavior.
+
+## Follow one record through training and evaluation
+
+The original source has 1,055 records. Removing three duplicate rows leaves 1,052 records, split into **841 training records** and **211 separate test records**. Each contains 41 numerical molecular properties and a known class label. `test_data.csv` contains the 211-row holdout used for the README comparison.
 
 The target is `class`. **RB** means ready biodegradable and is the positive class; **NRB** means not ready biodegradable and is the negative class. A numerical descriptor represents a property of a molecule, not its target label.
+
+During **offline training**, `train.py` reads the verified dataset through `fetch_data.py`, creates the split and fits five pipelines using only training rows. A pipeline saves its fitted preprocessing and classifier together in one `.joblib` file. The decision-tree pipeline needs only its classifier. The script also writes the test CSV, metric comparison, detailed evaluations and reproducibility manifest.
+
+During **app evaluation**, `app.py` asks `ml_core.py` to validate the selected labeled CSV and load those saved pipelines. Each model receives the 41 input properties, produces predictions and a continuous score, and its predictions are compared with the known `class` values. `presentation.py` supplies the charts and styled metric cards displayed by the app. Known labels are answers used for evaluation; they are not model inputs or predictions.
+
+Changing the classifier, uploading a file or refreshing the page repeats evaluation with saved models. It does **not** retrain them. Only explicitly running `python train.py` starts a new training run and rewrites the generated artifacts.
+
+## Reproduce or evaluate
+
+With the environment installed as described in the README, choose the operation you need:
+
+| Command | Effect |
+| --- | --- |
+| `python -m streamlit run app.py` | Evaluate the shipped saved models on the provided test set or a compatible uploaded file. |
+| `python train.py` | Reproduce offline training and regenerate `model/`, `test_data.csv` and `results/`; then launch the app to inspect the run. |
+| `python -m pytest` | Run the verification suite after installing `requirements-dev.txt`. |
+
+An upload must describe the **same chemical biodegradability task**, using the same 41 molecular properties and numerical conventions, plus known RB/NRB labels. An unrelated dataset does not become valid by renaming its columns. Validation checks file structure and values; it cannot prove the origin or scientific appropriateness of the measurements.
 
 ## Why the split comes before scaling
 
@@ -20,7 +48,7 @@ Three exact duplicate records are removed before splitting. Otherwise, an identi
 
 `StandardScaler` estimates each feature's mean and standard deviation. These estimates must come from training rows only. A scikit-learn `Pipeline` stores the fitted scaler with its classifier, so the same transformation is applied when the saved model sees test data. Fitting a scaler to the whole dataset would leak information from the test distribution.
 
-The decision tree does not need scaling: a threshold such as `feature < 4` can be transformed without changing the underlying ordering. Distance-based models, particularly KNN and RBF SVM, are sensitive to feature scales.
+The decision tree does not need scaling: a threshold such as `feature < 4` can be transformed without changing the underlying ordering. Distance-based models, particularly K-Nearest Neighbours (KNN) and the radial basis function (RBF) version of Support Vector Machine (SVM), are sensitive to feature scales.
 
 ## What each classifier learns
 
@@ -41,11 +69,11 @@ With RB as positive, **TP** is an RB example predicted RB, **FP** is an NRB exam
 | Metric | Meaning |
 | --- | --- |
 | Accuracy | `(TP + TN) / all examples`. Useful overall, but can hide class imbalance. |
-| AUC | Area under the ROC curve. Measures how well continuous scores rank RB above NRB as the threshold changes. |
+| AUC | Area under the receiver operating characteristic (ROC) curve. Measures how well continuous scores rank RB above NRB as the threshold changes. |
 | Precision | `TP / (TP + FP)`. Among RB predictions, how many are truly RB? |
 | Recall | `TP / (TP + FN)`. Among actual RB examples, how many are found? |
-| F1 | Harmonic mean of precision and recall. Both must be strong for F1 to be high. |
-| MCC | A correlation measure using all four confusion-matrix cells. It ranges from -1 to 1; 1 is perfect agreement and 0 indicates no correlation. |
+| F1 score | Harmonic mean of precision and recall. Both must be strong for F1 to be high. |
+| MCC | Matthews correlation coefficient, using all four confusion-matrix cells. It ranges from -1 to 1; 1 is perfect agreement and 0 indicates no correlation. |
 
 AUC must use continuous scores, not predicted class labels. Logistic Regression, Decision Tree, KNN and Gaussian Naive Bayes provide the RB probability. SVM provides an RB decision score; that score is not a probability, but it can rank examples for ROC AUC. The code looks up the RB class rather than assuming a probability column's position.
 

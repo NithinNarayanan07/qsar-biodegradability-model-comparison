@@ -3,6 +3,7 @@
 The target is ready biodegradability: RB is the positive class, NRB the negative
 class. Models are trained separately by ``train.py``; this module never fits one.
 """
+
 from __future__ import annotations
 
 import csv
@@ -14,23 +15,66 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.metrics import (
-    accuracy_score, classification_report, confusion_matrix, f1_score,
-    matthews_corrcoef, precision_score, recall_score, roc_auc_score,
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    matthews_corrcoef,
+    precision_score,
+    recall_score,
+    roc_auc_score,
 )
 from sklearn.pipeline import Pipeline
 
-# Descriptor names and order published by UCI dataset 254. The original CSV has
-# no header; adding these names makes uploaded test data understandable.
+# Dataset schema: 41 inputs, excluding the target, in the original UCI order.
+# The original CSV has no header; these names also define the upload contract.
 FEATURES: list[str] = [
-    "SpMax_L", "J_Dz(e)", "nHM", "F01[N-N]", "F04[C-N]", "NssssC", "nCb-",
-    "C%", "nCp", "nO", "F03[C-N]", "SdssC", "HyWi_B(m)", "LOC", "SM6_L",
-    "F03[C-O]", "Me", "Mi", "nN-N", "nArNO2", "nCRX3", "SpPosA_B(p)",
-    "nCIR", "B01[C-Br]", "B03[C-Cl]", "N-073", "SpMax_A", "Psi_i_1d",
-    "B04[C-Br]", "SdO", "TI2_L", "nCrt", "C-026", "F02[C-N]", "nHDon",
-    "SpMax_B(m)", "Psi_i_A", "nN", "SM6_B(m)", "nArCOOR", "nX",
+    "SpMax_L",
+    "J_Dz(e)",
+    "nHM",
+    "F01[N-N]",
+    "F04[C-N]",
+    "NssssC",
+    "nCb-",
+    "C%",
+    "nCp",
+    "nO",
+    "F03[C-N]",
+    "SdssC",
+    "HyWi_B(m)",
+    "LOC",
+    "SM6_L",
+    "F03[C-O]",
+    "Me",
+    "Mi",
+    "nN-N",
+    "nArNO2",
+    "nCRX3",
+    "SpPosA_B(p)",
+    "nCIR",
+    "B01[C-Br]",
+    "B03[C-Cl]",
+    "N-073",
+    "SpMax_A",
+    "Psi_i_1d",
+    "B04[C-Br]",
+    "SdO",
+    "TI2_L",
+    "nCrt",
+    "C-026",
+    "F02[C-N]",
+    "nHDon",
+    "SpMax_B(m)",
+    "Psi_i_A",
+    "nN",
+    "SM6_B(m)",
+    "nArCOOR",
+    "nX",
 ]
 TARGET = "class"
 CLASS_LABELS = ["NRB", "RB"]
+# Keep these identifiers stable across saved files and result tables; the UI
+# supplies expanded display names separately in presentation.py.
 MODEL_FILES = {
     "Logistic Regression": "logistic_regression.joblib",
     "Decision Tree": "decision_tree.joblib",
@@ -41,12 +85,14 @@ MODEL_FILES = {
 METRIC_NAMES = ["Accuracy", "AUC", "Precision", "Recall", "F1", "MCC"]
 
 
+# Labeled CSV parsing and validation.
 def validate_test_data(frame: pd.DataFrame) -> pd.DataFrame:
     """Validate a labeled test frame and return columns in the training order.
 
     Headers and class labels may have surrounding whitespace. Missing/extra
     columns, duplicate headers, missing values, nonnumeric/infinite descriptors,
     empty data, and labels other than NRB/RB raise a readable ``ValueError``.
+    The input is unchanged; the returned copy follows FEATURES + [TARGET].
     """
     if not isinstance(frame, pd.DataFrame):
         raise ValueError("Test data must be a pandas DataFrame.")
@@ -89,6 +135,7 @@ def read_test_csv(source: Any) -> pd.DataFrame:
 
     The standard CSV parser checks the *original* header before pandas can
     rename duplicate columns. Every record must have exactly the header width.
+    A string is treated as a file path; pass CSV content as bytes or a file object.
     """
     try:
         if isinstance(source, bytes):
@@ -122,6 +169,7 @@ def read_test_csv(source: Any) -> pd.DataFrame:
     return validate_test_data(pd.DataFrame(rows, columns=header))
 
 
+# Trusted saved artifacts, including each classifier's fitted preprocessing.
 def load_models(model_dir: Path) -> dict[str, Pipeline]:
     """Load only the five fixed, project-generated pipeline files.
 
@@ -145,12 +193,16 @@ def load_models(model_dir: Path) -> dict[str, Pipeline]:
     return models
 
 
+# Evaluation only: no fitting or model selection occurs in these functions.
 def evaluate_model(model: Pipeline, frame: pd.DataFrame) -> dict[str, Any]:
     """Evaluate an already fitted model; return all six metrics and diagnostics.
 
     AUC uses the RB probability or continuous decision score. AUC is undefined
     for a one-class upload and is then ``None``; the other metrics still work.
     Confusion matrix axes always follow [NRB, RB], even for one-class uploads.
+    The result contains metrics in METRIC_NAMES order, a confusion matrix and
+    classification report, plus predictions/scores aligned to the input rows.
+    Higher scores always favor RB; they need not be calibrated probabilities.
     """
     data = validate_test_data(frame)
     features = data[FEATURES]
@@ -161,6 +213,7 @@ def evaluate_model(model: Pipeline, frame: pd.DataFrame) -> dict[str, Any]:
         scores = model.predict_proba(features)[:, positive_index]
     else:
         scores = np.asarray(model.decision_function(features))
+        # A binary decision score favors classes_[1]; orient it toward RB.
         if list(model.classes_)[1] != "RB":
             scores = -scores
     metrics = {
@@ -184,7 +237,10 @@ def evaluate_model(model: Pipeline, frame: pd.DataFrame) -> dict[str, Any]:
 
 def evaluate_models(models: dict[str, Pipeline], frame: pd.DataFrame) -> pd.DataFrame:
     """Compare the five saved models on the same labeled test data."""
-    return pd.DataFrame([
-        {"ML Model Name": name, **evaluate_model(model, frame)["metrics"]}
-        for name, model in models.items()
-    ], columns=["ML Model Name", *METRIC_NAMES])
+    return pd.DataFrame(
+        [
+            {"ML Model Name": name, **evaluate_model(model, frame)["metrics"]}
+            for name, model in models.items()
+        ],
+        columns=["ML Model Name", *METRIC_NAMES],
+    )

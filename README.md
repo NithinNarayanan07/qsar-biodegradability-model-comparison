@@ -2,7 +2,7 @@
 
 A reproducible Machine Learning Assignment 2 project: train five classifiers on one dataset, save their preprocessing and models, and evaluate labeled test CSV files in Streamlit without retraining.
 
-**Submission status:** the reproducible models and Streamlit app are implemented; repository and app links are below. BITS Virtual Lab execution evidence and the final submission PDF remain pending.
+**Submission status:** the reproducible models and Streamlit app are implemented, and BITS Virtual Lab execution is complete. Repository and app links are below. The final PDF is assembled separately for the student's upload; final portal submission is not claimed here.
 
 ## a. Problem statement
 
@@ -223,15 +223,17 @@ Dependency versions are pinned because saved scikit-learn artifacts should be lo
 
 ## BITS Virtual Lab and final submission
 
-Check lab access early. Copy or clone this project inside BITS Virtual Lab, create the Python environment, run the training/evaluation code there, and launch and exercise the app there. Capture **one genuine screenshot of assignment execution with visible lab context**. Keep the result readable. This evidence is still pending; no lab execution or screenshot is claimed by this local project.
+The project was executed inside **BITS Virtual Lab**. Source commit `96c69bb` was downloaded into the lab because Git was unavailable. A Python **3.12.7** virtual environment was created with the pinned dependencies. All five classifiers were trained there, and their evaluation metrics matched the README comparison to four decimal places. The Streamlit app was then launched inside the lab and opened in Firefox at `localhost:8501`.
 
-Prepare one final PDF in the required order:
+A single user-captured execution screenshot, with private connection details concealed, is provided in the final submission PDF. The screenshot and student identification are kept in the private submission artifacts rather than the public repository. Local and Community Cloud previews are separate from this lab evidence. See `screenshots/README.md` for the preview descriptions.
+
+The final PDF is assembled separately in the required order:
 
 1. Clickable GitHub repository link.
 2. Clickable live Streamlit Community Cloud app link.
 3. BITS Virtual Lab execution screenshot.
 4. The complete final README content, including the measured comparison table and observations.
 
-Before submitting, verify the links and app again, confirm all required files and the BITS execution evidence are present, and submit the final PDF rather than leaving a draft. The assignment brief states a deadline of **8 November 2026 at 23:59**.
+The student must upload and submit the final PDF in the assignment portal, rather than leave a draft. Before doing so, verify the links and app again and confirm all required files and the BITS execution image are present. The assignment brief states a deadline of **8 November 2026 at 23:59**.
 
 For an explanation of the code and experiments to perform yourself, read [LEARNING_GUIDE.md](LEARNING_GUIDE.md).
